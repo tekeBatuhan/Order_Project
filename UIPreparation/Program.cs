@@ -14,8 +14,8 @@ namespace UIPreparation
             var deletePath = exePath + @"\node_modules\selenium-webdriver\lib\test\data";
             var bld = new StringBuilder();
 
-            bld.Append("npm install -g @angular/cli@latest&");
-            bld.Append("npm install&");
+            //bld.Append("npm install -g @angular/cli@latest&");
+            //bld.Append("npm install&");
             bld.Append("npm install popper.js --save&");
             bld.Append("code .&");
             bld.Append($"RD /S /Q {deletePath} &");
