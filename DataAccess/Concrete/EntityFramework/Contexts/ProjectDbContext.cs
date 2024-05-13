@@ -56,6 +56,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
         public DbSet<Product> Products { get; set; }
         public DbSet<WareHouse> WareHouses { get; set; }
         public DbSet<WareHouseProductMapping> WareHouseProductMappings { get; set; }
+        
 
 
         protected IConfiguration Configuration { get; }

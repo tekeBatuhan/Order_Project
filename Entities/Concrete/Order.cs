@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Entities.Concrete
 {
-    public class Order : BaseEntity
+    public class Order : ProjectBaseEntity, IEntity
     {
         public int Quantity { get; set; }
         public int ProductId { get; set; }

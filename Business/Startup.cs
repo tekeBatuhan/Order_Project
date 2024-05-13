@@ -90,6 +90,12 @@ namespace Business
         public void ConfigureDevelopmentServices(IServiceCollection services)
         {
             ConfigureServices(services);
+            services.AddTransient<IWareHouseProductMappingRepository, WareHouseProductMappingRepository>();
+            services.AddTransient<IWareHouseRepository, WareHouseRepository>();
+            services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddTransient<IOrderRepository, OrderRepository>();
+            services.AddTransient<ICustomerRepository, CustomerRepository>();
+            services.AddTransient<IColorRepository, ColorRepository>();
             services.AddTransient<ILogRepository, LogRepository>();
             services.AddTransient<ITranslateRepository, TranslateRepository>();
             services.AddTransient<ILanguageRepository, LanguageRepository>();
@@ -113,6 +119,12 @@ namespace Business
         public void ConfigureStagingServices(IServiceCollection services)
         {
             ConfigureServices(services);
+            services.AddTransient<IWareHouseProductMappingRepository, WareHouseProductMappingRepository>();
+            services.AddTransient<IWareHouseRepository, WareHouseRepository>();
+            services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddTransient<IOrderRepository, OrderRepository>();
+            services.AddTransient<ICustomerRepository, CustomerRepository>();
+            services.AddTransient<IColorRepository, ColorRepository>();
             services.AddTransient<ILogRepository, LogRepository>();
             services.AddTransient<ITranslateRepository, TranslateRepository>();
             services.AddTransient<ILanguageRepository, LanguageRepository>();
@@ -135,6 +147,12 @@ namespace Business
         public void ConfigureProductionServices(IServiceCollection services)
         {
             ConfigureServices(services);
+            services.AddTransient<IWareHouseProductMappingRepository, WareHouseProductMappingRepository>();
+            services.AddTransient<IWareHouseRepository, WareHouseRepository>();
+            services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddTransient<IOrderRepository, OrderRepository>();
+            services.AddTransient<ICustomerRepository, CustomerRepository>();
+            services.AddTransient<IColorRepository, ColorRepository>();
             services.AddTransient<ILogRepository, LogRepository>();
             services.AddTransient<ITranslateRepository, TranslateRepository>();
             services.AddTransient<ILanguageRepository, LanguageRepository>();
