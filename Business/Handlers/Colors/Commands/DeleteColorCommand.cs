@@ -9,6 +9,7 @@ using DataAccess.Abstract;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using System;
 
 
 namespace Business.Handlers.Colors.Commands
@@ -19,6 +20,7 @@ namespace Business.Handlers.Colors.Commands
     public class DeleteColorCommand : IRequest<IResult>
     {
         public int Id { get; set; }
+        public int UserId { get; set; }
 
         public class DeleteColorCommandHandler : IRequestHandler<DeleteColorCommand, IResult>
         {
@@ -37,8 +39,12 @@ namespace Business.Handlers.Colors.Commands
             public async Task<IResult> Handle(DeleteColorCommand request, CancellationToken cancellationToken)
             {
                 var colorToDelete = _colorRepository.Get(p => p.Id == request.Id);
+                colorToDelete.Status = false;
+                colorToDelete.isDeleted = true;
+                colorToDelete.LastUpdatedDate = DateTime.Now;
+                colorToDelete.LastUpdatedUserId = request.UserId;
 
-                _colorRepository.Delete(colorToDelete);
+                _colorRepository.Update(colorToDelete);
                 await _colorRepository.SaveChangesAsync();
                 return new SuccessResult(Messages.Deleted);
             }

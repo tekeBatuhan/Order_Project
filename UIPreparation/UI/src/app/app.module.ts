@@ -60,7 +60,7 @@ export function tokenGetter() {
   ],
 
   providers: [
-    LoginGuard,
+    LoginGuard,    
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,

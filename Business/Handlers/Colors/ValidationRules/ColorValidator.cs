@@ -9,7 +9,7 @@ namespace Business.Handlers.Colors.ValidationRules
     {
         public CreateColorValidator()
         {
-            RuleFor(x => x.Products).NotEmpty();
+            //RuleFor(x => x.Products).NotEmpty();
 
         }
     }
@@ -17,7 +17,7 @@ namespace Business.Handlers.Colors.ValidationRules
     {
         public UpdateColorValidator()
         {
-            RuleFor(x => x.Products).NotEmpty();
+            //RuleFor(x => x.Products).NotEmpty();
 
         }
     }

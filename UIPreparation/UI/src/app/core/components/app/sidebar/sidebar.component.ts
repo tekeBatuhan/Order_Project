@@ -23,7 +23,13 @@ export const ADMINROUTES: RouteInfo[] = [
 ];
 
 export const USERROUTES: RouteInfo[] = [ 
-  //{ path: '/log', title: 'Logs', icon: 'update', class: '', claim: "GetLogDtoQuery" }
+  { path: '/color', title: 'Colors', icon: 'update', class: '', claim: "GetColorsQuery" },
+  { path: '/customer', title: 'Customers', icon: 'update', class: '', claim: "GetCustomersQuery" },
+  { path: '/order', title: 'Orders', icon: 'update', class: '', claim: "GetOrdersQuery" },
+  { path: '/product', title: 'Products', icon: 'update', class: '', claim: "GetProductsQuery" },
+  { path: '/warehouse', title: 'WareHouses', icon: 'update', class: '', claim: "GetWareHousesQuery" }
+
+
 ];
 
 @Component({
