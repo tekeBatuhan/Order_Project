@@ -49,7 +49,7 @@ namespace Business.Handlers.Orders.Commands
             [SecuredOperation(Priority = 1)]
             public async Task<IResult> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
             {
-                var isThereOrderRecord = _orderRepository.Query().Any(u => u.CreatedUserId == request.CreatedUserId);
+                var isThereOrderRecord = _orderRepository.Query().Any(u => u.ProductId == request.ProductId);
 
                 if (isThereOrderRecord == true)
                     return new ErrorResult(Messages.NameAlreadyExist);
@@ -61,7 +61,7 @@ namespace Business.Handlers.Orders.Commands
                     LastUpdatedUserId = request.LastUpdatedUserId,
                     LastUpdatedDate = request.LastUpdatedDate,
                     Status = request.Status,
-                    isDeleted = request.isDeleted,
+                    isDeleted = false,
                     Quantity = request.Quantity,
                     ProductId = request.ProductId,
                     CustomerId = request.CustomerId,

@@ -30,6 +30,8 @@ namespace Business.Handlers.WareHouseProductMappings.Commands
         public bool isDeleted { get; set; }
         public int ProductId { get; set; }
         public int WareHouseId { get; set; }
+        public int Count { get; set; }
+        public bool ReadyForSale { get; set; }
 
         public class UpdateWareHouseProductMappingCommandHandler : IRequestHandler<UpdateWareHouseProductMappingCommand, IResult>
         {
@@ -50,16 +52,14 @@ namespace Business.Handlers.WareHouseProductMappings.Commands
             {
                 var isThereWareHouseProductMappingRecord = await _wareHouseProductMappingRepository.GetAsync(u => u.Id == request.Id);
 
-
-                isThereWareHouseProductMappingRecord.CreatedUserId = request.CreatedUserId;
-                isThereWareHouseProductMappingRecord.CreatedDate = request.CreatedDate;
                 isThereWareHouseProductMappingRecord.LastUpdatedUserId = request.LastUpdatedUserId;
                 isThereWareHouseProductMappingRecord.LastUpdatedDate = request.LastUpdatedDate;
                 isThereWareHouseProductMappingRecord.Status = request.Status;
                 isThereWareHouseProductMappingRecord.isDeleted = request.isDeleted;
                 isThereWareHouseProductMappingRecord.ProductId = request.ProductId;
                 isThereWareHouseProductMappingRecord.WareHouseId = request.WareHouseId;
-
+                isThereWareHouseProductMappingRecord.ReadyForSale = request.ReadyForSale;
+                isThereWareHouseProductMappingRecord.Count = request.Count;
 
                 _wareHouseProductMappingRepository.Update(isThereWareHouseProductMappingRecord);
                 await _wareHouseProductMappingRepository.SaveChangesAsync();

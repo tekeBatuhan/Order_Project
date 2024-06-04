@@ -1,7 +1,7 @@
 ﻿import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Product } from '../models/Product';
+import { Product } from '../models/product';
 import { environment } from 'environments/environment';
 
 
@@ -32,8 +32,8 @@ export class ProductService {
 
   }
 
-  deleteProduct(id: number) {
-    return this.httpClient.request('delete', environment.getApiUrl + '/products/', { body: { id: id } });
+  deleteProduct(id: number, userId:number) {
+    return this.httpClient.request('delete', environment.getApiUrl + '/products/', { body: { id: id, userId:userId } });
   }
 
 

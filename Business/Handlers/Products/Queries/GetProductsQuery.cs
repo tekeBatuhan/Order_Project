@@ -14,7 +14,6 @@ using Core.Aspects.Autofac.Caching;
 
 namespace Business.Handlers.Products.Queries
 {
-
     public class GetProductsQuery : IRequest<IDataResult<IEnumerable<Product>>>
     {
         public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, IDataResult<IEnumerable<Product>>>
@@ -34,7 +33,8 @@ namespace Business.Handlers.Products.Queries
             [SecuredOperation(Priority = 1)]
             public async Task<IDataResult<IEnumerable<Product>>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
             {
-                return new SuccessDataResult<IEnumerable<Product>>(await _productRepository.GetListAsync());
+                var products = await _productRepository.GetListAsync(x => x.Status);
+                return new SuccessDataResult<IEnumerable<Product>>(products);
             }
         }
     }

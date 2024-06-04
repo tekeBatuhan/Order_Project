@@ -1,7 +1,7 @@
 ﻿import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Customer } from '../models/Customer';
+import { Customer } from '../models/customer';
 import { environment } from 'environments/environment';
 
 
@@ -32,8 +32,8 @@ export class CustomerService {
 
   }
 
-  deleteCustomer(id: number) {
-    return this.httpClient.request('delete', environment.getApiUrl + '/customers/', { body: { id: id } });
+  deleteCustomer(id: number, userId:number) {
+    return this.httpClient.request('delete', environment.getApiUrl + '/customers/', { body: { id: id, userId:userId } });
   }
 
 

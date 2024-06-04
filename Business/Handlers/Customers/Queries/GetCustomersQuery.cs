@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Core.Aspects.Autofac.Logging;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using Core.Aspects.Autofac.Caching;
+using ServiceStack;
 
 namespace Business.Handlers.Customers.Queries
 {
@@ -34,7 +35,7 @@ namespace Business.Handlers.Customers.Queries
             [SecuredOperation(Priority = 1)]
             public async Task<IDataResult<IEnumerable<Customer>>> Handle(GetCustomersQuery request, CancellationToken cancellationToken)
             {
-                return new SuccessDataResult<IEnumerable<Customer>>(await _customerRepository.GetListAsync());
+                return new SuccessDataResult<IEnumerable<Customer>>(await _customerRepository.GetListAsync(x =>x.Status));
             }
         }
     }

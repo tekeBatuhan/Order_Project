@@ -3,15 +3,16 @@ import { WareHouseProductMapping } from "../../wareHouseProductMapping/models/Wa
 
 export class Product{
     id?:number; 
-createdUserId?:number; 
-createdDate?:(Date | any); 
-lastUpdatedUserId?:number; 
-lastUpdatedDate?:(Date | any); 
-status:boolean; 
-isDeleted:boolean; 
-name?:string; 
-colorId?:number; 
-wareHouseProductMappings?:WareHouseProductMapping[]; 
-orders?:Order[]; 
+    createdUserId?:number; 
+    createdDate?:(Date | any); 
+    lastUpdatedUserId?:number; 
+    lastUpdatedDate?:(Date | any); 
+    status:boolean; 
+    isDeleted:boolean; 
+    name?:string; 
+    colorId?:number; 
+    wareHouseProductMappings?:WareHouseProductMapping[]; 
+    orders?:Order[]; 
+    size?:any;
 
 }

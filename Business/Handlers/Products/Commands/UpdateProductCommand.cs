@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Core.Aspects.Autofac.Validation;
 using Business.Handlers.Products.ValidationRules;
+using Entities.Enums;
 
 
 namespace Business.Handlers.Products.Commands
@@ -30,6 +31,7 @@ namespace Business.Handlers.Products.Commands
         public bool isDeleted { get; set; }
         public string Name { get; set; }
         public int ColorId { get; set; }
+        public Size Size { get; set; }
         public System.Collections.Generic.List<WareHouseProductMapping> WareHouseProductMappings { get; set; }
         public System.Collections.Generic.List<Order> Orders { get; set; }
 
@@ -52,18 +54,14 @@ namespace Business.Handlers.Products.Commands
             {
                 var isThereProductRecord = await _productRepository.GetAsync(u => u.Id == request.Id);
 
-
-                isThereProductRecord.CreatedUserId = request.CreatedUserId;
-                isThereProductRecord.CreatedDate = request.CreatedDate;
                 isThereProductRecord.LastUpdatedUserId = request.LastUpdatedUserId;
                 isThereProductRecord.LastUpdatedDate = request.LastUpdatedDate;
                 isThereProductRecord.Status = request.Status;
-                isThereProductRecord.isDeleted = request.isDeleted;
                 isThereProductRecord.Name = request.Name;
                 isThereProductRecord.ColorId = request.ColorId;
                 isThereProductRecord.WareHouseProductMappings = request.WareHouseProductMappings;
                 isThereProductRecord.Orders = request.Orders;
-
+                isThereProductRecord.Size = request.Size;
 
                 _productRepository.Update(isThereProductRecord);
                 await _productRepository.SaveChangesAsync();

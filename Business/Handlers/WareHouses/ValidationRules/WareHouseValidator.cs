@@ -9,7 +9,7 @@ namespace Business.Handlers.WareHouses.ValidationRules
     {
         public CreateWareHouseValidator()
         {
-            RuleFor(x => x.WareHouseProductMappings).NotEmpty();
+            //RuleFor(x => x.WareHouseProductMappings).NotEmpty();
 
         }
     }
@@ -17,7 +17,7 @@ namespace Business.Handlers.WareHouses.ValidationRules
     {
         public UpdateWareHouseValidator()
         {
-            RuleFor(x => x.WareHouseProductMappings).NotEmpty();
+            //RuleFor(x => x.WareHouseProductMappings).NotEmpty();
 
         }
     }

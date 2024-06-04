@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Entities.Concrete;
 using System.Collections.Generic;
+using Business.Handlers.Languages.Queries;
+using Core.Entities.Dtos;
 
 namespace WebAPI.Controllers
 {
@@ -35,6 +37,22 @@ namespace WebAPI.Controllers
                 return Ok(result.Data);
             }
             return BadRequest(result.Message);
+        }
+
+        /// <summary>
+        /// ColorsLookUp
+        /// </summary>
+        /// <remarks>Colors</remarks>
+        /// <return>Colors List</return>
+        /// <response code="200"></response>
+        [AllowAnonymous]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SelectionItem>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpGet("lookups")]
+        public async Task<IActionResult> GetLookupList()
+        {
+            return GetResponseOnlyResultData(await Mediator.Send(new GetColorsLookUpQuery()));
         }
 
         ///<summary>

@@ -32,8 +32,8 @@ export class OrderService {
 
   }
 
-  deleteOrder(id: number) {
-    return this.httpClient.request('delete', environment.getApiUrl + '/orders/', { body: { id: id } });
+  deleteOrder(id: number,userId:number) {
+    return this.httpClient.request('delete', environment.getApiUrl + '/orders/', { body: { id: id,userId:userId } });
   }
 
 

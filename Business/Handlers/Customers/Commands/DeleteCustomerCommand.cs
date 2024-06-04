@@ -9,6 +9,8 @@ using DataAccess.Abstract;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using System;
+using System.Reflection.Metadata.Ecma335;
 
 
 namespace Business.Handlers.Customers.Commands
@@ -19,6 +21,7 @@ namespace Business.Handlers.Customers.Commands
     public class DeleteCustomerCommand : IRequest<IResult>
     {
         public int Id { get; set; }
+        public int UserId { get; set; }
 
         public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerCommand, IResult>
         {
@@ -37,8 +40,13 @@ namespace Business.Handlers.Customers.Commands
             public async Task<IResult> Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
             {
                 var customerToDelete = _customerRepository.Get(p => p.Id == request.Id);
+                customerToDelete.Status = false;
+                customerToDelete.isDeleted = true;
+                customerToDelete.LastUpdatedDate = DateTime.Now;
+                customerToDelete.LastUpdatedUserId = request.UserId;
 
-                _customerRepository.Delete(customerToDelete);
+
+                _customerRepository.Update(customerToDelete);
                 await _customerRepository.SaveChangesAsync();
                 return new SuccessResult(Messages.Deleted);
             }

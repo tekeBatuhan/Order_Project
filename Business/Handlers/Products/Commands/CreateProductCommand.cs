@@ -13,6 +13,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
 using Business.Handlers.Products.ValidationRules;
+using Entities.Enums;
+using System;
 
 namespace Business.Handlers.Products.Commands
 {
@@ -30,6 +32,7 @@ namespace Business.Handlers.Products.Commands
         public bool isDeleted { get; set; }
         public string Name { get; set; }
         public int ColorId { get; set; }
+        public Size Size { get; set; }
         public System.Collections.Generic.List<WareHouseProductMapping> WareHouseProductMappings { get; set; }
         public System.Collections.Generic.List<Order> Orders { get; set; }
 
@@ -50,7 +53,7 @@ namespace Business.Handlers.Products.Commands
             [SecuredOperation(Priority = 1)]
             public async Task<IResult> Handle(CreateProductCommand request, CancellationToken cancellationToken)
             {
-                var isThereProductRecord = _productRepository.Query().Any(u => u.CreatedUserId == request.CreatedUserId);
+                var isThereProductRecord = _productRepository.Query().Any(u => u.Name == request.Name && u.Status);
 
                 if (isThereProductRecord == true)
                     return new ErrorResult(Messages.NameAlreadyExist);
@@ -62,17 +65,18 @@ namespace Business.Handlers.Products.Commands
                     LastUpdatedUserId = request.LastUpdatedUserId,
                     LastUpdatedDate = request.LastUpdatedDate,
                     Status = request.Status,
-                    isDeleted = request.isDeleted,
+                    isDeleted = false,
                     Name = request.Name,
                     ColorId = request.ColorId,
                     WareHouseProductMappings = request.WareHouseProductMappings,
                     Orders = request.Orders,
+                    Size = (Size)Enum.Parse(typeof(Size), request.Size.ToString()),
 
                 };
 
-                _productRepository.Add(addedProduct);
+                var result = _productRepository.Add(addedProduct);
                 await _productRepository.SaveChangesAsync();
-                return new SuccessResult(Messages.Added);
+                return new SuccessResult(Messages.Added, result.Id);
             }
         }
     }

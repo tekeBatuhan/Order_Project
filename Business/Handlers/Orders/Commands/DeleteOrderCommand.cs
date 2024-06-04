@@ -9,6 +9,7 @@ using DataAccess.Abstract;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using System;
 
 
 namespace Business.Handlers.Orders.Commands
@@ -19,6 +20,7 @@ namespace Business.Handlers.Orders.Commands
     public class DeleteOrderCommand : IRequest<IResult>
     {
         public int Id { get; set; }
+        public int UserId { get; set; }
 
         public class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand, IResult>
         {
@@ -37,8 +39,12 @@ namespace Business.Handlers.Orders.Commands
             public async Task<IResult> Handle(DeleteOrderCommand request, CancellationToken cancellationToken)
             {
                 var orderToDelete = _orderRepository.Get(p => p.Id == request.Id);
+               orderToDelete.Status = false;
+               orderToDelete.isDeleted = true;
+               orderToDelete.LastUpdatedDate = DateTime.Now;
+               orderToDelete.LastUpdatedUserId = request.UserId;
 
-                _orderRepository.Delete(orderToDelete);
+                _orderRepository.Update(orderToDelete);
                 await _orderRepository.SaveChangesAsync();
                 return new SuccessResult(Messages.Deleted);
             }

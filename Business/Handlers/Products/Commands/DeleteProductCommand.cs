@@ -9,6 +9,7 @@ using DataAccess.Abstract;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using System;
 
 
 namespace Business.Handlers.Products.Commands
@@ -19,6 +20,8 @@ namespace Business.Handlers.Products.Commands
     public class DeleteProductCommand : IRequest<IResult>
     {
         public int Id { get; set; }
+        public int UserId { get; set; }
+
 
         public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, IResult>
         {
@@ -37,8 +40,12 @@ namespace Business.Handlers.Products.Commands
             public async Task<IResult> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
             {
                 var productToDelete = _productRepository.Get(p => p.Id == request.Id);
+                productToDelete.Status = false;
+                productToDelete.isDeleted = true;
+                productToDelete.LastUpdatedDate = DateTime.Now;
+                productToDelete.LastUpdatedUserId = request.UserId;
 
-                _productRepository.Delete(productToDelete);
+                _productRepository.Update(productToDelete);
                 await _productRepository.SaveChangesAsync();
                 return new SuccessResult(Messages.Deleted);
             }

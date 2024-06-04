@@ -29,6 +29,7 @@ namespace Business.Handlers.WareHouses.Commands
         public bool Status { get; set; }
         public bool isDeleted { get; set; }
         public string Name { get; set; }
+
         public System.Collections.Generic.List<WareHouseProductMapping> WareHouseProductMappings { get; set; }
 
 
@@ -48,7 +49,7 @@ namespace Business.Handlers.WareHouses.Commands
             [SecuredOperation(Priority = 1)]
             public async Task<IResult> Handle(CreateWareHouseCommand request, CancellationToken cancellationToken)
             {
-                var isThereWareHouseRecord = _wareHouseRepository.Query().Any(u => u.CreatedUserId == request.CreatedUserId);
+                var isThereWareHouseRecord = _wareHouseRepository.Query().Any(u => u.Name == request.Name && u.Status);
 
                 if (isThereWareHouseRecord == true)
                     return new ErrorResult(Messages.NameAlreadyExist);
@@ -60,7 +61,7 @@ namespace Business.Handlers.WareHouses.Commands
                     LastUpdatedUserId = request.LastUpdatedUserId,
                     LastUpdatedDate = request.LastUpdatedDate,
                     Status = request.Status,
-                    isDeleted = request.isDeleted,
+                    isDeleted = false,
                     Name = request.Name,
                     WareHouseProductMappings = request.WareHouseProductMappings,
 

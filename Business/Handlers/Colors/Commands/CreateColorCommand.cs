@@ -60,7 +60,7 @@ namespace Business.Handlers.Colors.Commands
                     LastUpdatedUserId = request.LastUpdatedUserId,
                     LastUpdatedDate = request.LastUpdatedDate,
                     Status = request.Status,
-                    isDeleted = request.isDeleted,
+                    isDeleted = false,
                     Name = request.Name,
                     Products = request.Products,
 

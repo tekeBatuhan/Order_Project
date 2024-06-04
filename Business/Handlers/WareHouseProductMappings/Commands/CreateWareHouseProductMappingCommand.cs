@@ -30,6 +30,8 @@ namespace Business.Handlers.WareHouseProductMappings.Commands
         public bool isDeleted { get; set; }
         public int ProductId { get; set; }
         public int WareHouseId { get; set; }
+        public int Count { get; set; }
+        public bool ReadyForSale { get; set; }
 
 
         public class CreateWareHouseProductMappingCommandHandler : IRequestHandler<CreateWareHouseProductMappingCommand, IResult>
@@ -48,25 +50,35 @@ namespace Business.Handlers.WareHouseProductMappings.Commands
             [SecuredOperation(Priority = 1)]
             public async Task<IResult> Handle(CreateWareHouseProductMappingCommand request, CancellationToken cancellationToken)
             {
-                var isThereWareHouseProductMappingRecord = _wareHouseProductMappingRepository.Query().Any(u => u.CreatedUserId == request.CreatedUserId);
+                var isThereWareHouseProductMappingRecord = _wareHouseProductMappingRepository.Query().Any(u => u.ProductId == request.ProductId && u.WareHouseId == request.WareHouseId && u.Status);
 
                 if (isThereWareHouseProductMappingRecord == true)
-                    return new ErrorResult(Messages.NameAlreadyExist);
-
-                var addedWareHouseProductMapping = new WareHouseProductMapping
                 {
-                    CreatedUserId = request.CreatedUserId,
-                    CreatedDate = request.CreatedDate,
-                    LastUpdatedUserId = request.LastUpdatedUserId,
-                    LastUpdatedDate = request.LastUpdatedDate,
-                    Status = request.Status,
-                    isDeleted = request.isDeleted,
-                    ProductId = request.ProductId,
-                    WareHouseId = request.WareHouseId,
+                    var mapping = _wareHouseProductMappingRepository.Query().FirstOrDefault(u => u.ProductId == request.ProductId && u.WareHouseId == request.WareHouseId && u.Status);
+                    mapping.Count += request.Count;
+                    _wareHouseProductMappingRepository.Update(mapping);
+                }
+                else 
+                {
+                    var addedWareHouseProductMapping = new WareHouseProductMapping
+                    {
+                        CreatedUserId = request.CreatedUserId,
+                        CreatedDate = request.CreatedDate,
+                        LastUpdatedUserId = request.LastUpdatedUserId,
+                        LastUpdatedDate = request.LastUpdatedDate,
+                        Status = request.Status,
+                        isDeleted = false,
+                        ProductId = request.ProductId,
+                        WareHouseId = request.WareHouseId,
+                        Count = request.Count,
+                        ReadyForSale = request.ReadyForSale,
 
-                };
+                    };
 
-                _wareHouseProductMappingRepository.Add(addedWareHouseProductMapping);
+                    _wareHouseProductMappingRepository.Add(addedWareHouseProductMapping);
+
+                }
+                
                 await _wareHouseProductMappingRepository.SaveChangesAsync();
                 return new SuccessResult(Messages.Added);
             }

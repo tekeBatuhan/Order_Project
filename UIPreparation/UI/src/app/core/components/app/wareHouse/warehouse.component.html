@@ -32,7 +32,7 @@
 	
                    <ng-container matColumnDef="createdDate">
                      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'CreatedDate'|translate}}</th>
-                     <td mat-cell *matCellDef="let element">{{element.createdDate}}</td>
+                     <td mat-cell *matCellDef="let element">{{element.createdDate | date:'short'}}</td>
 				   </ng-container>
 	
                    <ng-container matColumnDef="lastUpdatedUserId">
@@ -121,52 +121,6 @@
         <form *ngIf="wareHouseAddForm" [formGroup]="wareHouseAddForm" (ngSubmit)="save()">
           
 					<div class="row">
-						<div class="col-md-12">
-							<select class="browser-default custom-select" formControlName="createdUserId">
-								<option *ngFor="let item of wareHouselookUp" [value]="item.id"> {{item.label}}</option>
-							</select>
-						</div>
-					</div>
-					<div class="row">
-            <div class="col col-md-12">
-              <mat-form-field class="example-full-width">
-                <input matInput placeholder="createdDate" type="date" id="createdDate" name="createdDate"
-                       formControlName="createdDate" />
-                <div class="alert alert-danger"
-                     *ngIf="wareHouseAddForm.get('createdDate')!.hasError('createdDate') && wareHouseAddForm.get('createdDate')!.dirty">
-                </div>
-              </mat-form-field>
-            </div>
-          </div>
-					<div class="row">
-						<div class="col-md-12">
-							<select class="browser-default custom-select" formControlName="lastUpdatedUserId">
-								<option *ngFor="let item of wareHouselookUp" [value]="item.id"> {{item.label}}</option>
-							</select>
-						</div>
-					</div>
-					<div class="row">
-            <div class="col col-md-12">
-              <mat-form-field class="example-full-width">
-                <input matInput placeholder="lastUpdatedDate" type="date" id="lastUpdatedDate" name="lastUpdatedDate"
-                       formControlName="lastUpdatedDate" />
-                <div class="alert alert-danger"
-                     *ngIf="wareHouseAddForm.get('lastUpdatedDate')!.hasError('lastUpdatedDate') && wareHouseAddForm.get('lastUpdatedDate')!.dirty">
-                </div>
-              </mat-form-field>
-            </div>
-          </div><div class="row">
-            <div class="col col-md-2">
-                       <mat-checkbox  formControlName="status" id="status" name="status" > status
-                      </mat-checkbox>
-            </div>
-          </div><div class="row">
-            <div class="col col-md-2">
-                       <mat-checkbox  formControlName="isDeleted" id="isDeleted" name="isDeleted" > isDeleted
-                      </mat-checkbox>
-            </div>
-          </div>
-					<div class="row">
             <div class="col col-md-12">
               <mat-form-field class="example-full-width">
                 <input matInput placeholder="name" type="text" id="name" name="name"
@@ -177,6 +131,13 @@
               </mat-form-field>
             </div>
           </div>
+					<div class="row">
+            <div class="col col-md-2">
+                       <mat-checkbox  formControlName="status" id="status" name="status" > status
+                      </mat-checkbox>
+            </div>
+          </div>
+					
                    
           <button mat-raised-button type="submit" class="btn btn-danger pull-right">{{'Save'|translate}}</button>
           <div class="clearfix"></div>

@@ -6,8 +6,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { AlertifyService } from 'app/core/services/alertify.service';
 import { LookUpService } from 'app/core/services/lookUp.service';
 import { AuthService } from 'app/core/components/admin/login/services/auth.service';
-import { Customer } from './models/Customer';
-import { CustomerService } from './services/Customer.service';
+import { Customer } from './models/customer';
+import { CustomerService } from './services/customer.service';
 import { environment } from 'environments/environment';
 
 declare var jQuery: any;
@@ -22,7 +22,7 @@ export class CustomerComponent implements AfterViewInit, OnInit {
 	dataSource: MatTableDataSource<any>;
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
-	displayedColumns: string[] = ['id','createdUserId','createdDate','lastUpdatedUserId','lastUpdatedDate','status','isDeleted','name','code','address','phoneNumber','email', 'update','delete'];
+	displayedColumns: string[] = ['name','code','address','phoneNumber','email','createdDate','status', 'update','delete'];
 
 	customerList:Customer[];
 	customer:Customer=new Customer();
@@ -73,6 +73,7 @@ export class CustomerComponent implements AfterViewInit, OnInit {
 			jQuery('#customer').modal('hide');
 			this.alertifyService.success(data);
 			this.clearFormGroup(this.customerAddForm);
+			this.createCustomerAddForm();
 
 		})
 
@@ -97,23 +98,23 @@ export class CustomerComponent implements AfterViewInit, OnInit {
 
 	createCustomerAddForm() {
 		this.customerAddForm = this.formBuilder.group({		
-			id : [0],
-createdUserId : [0, Validators.required],
-createdDate : [null, Validators.required],
-lastUpdatedUserId : [0, Validators.required],
-lastUpdatedDate : [null, Validators.required],
-status : [false, Validators.required],
-isDeleted : [false, Validators.required],
-name : ["", Validators.required],
-code : ["", Validators.required],
-address : ["", Validators.required],
-phoneNumber : ["", Validators.required],
-email : ["", Validators.required]
+			id : 0,
+			createdUserId : this.authService.getCurrentUserId(),
+			createdDate : new Date(),
+			lastUpdatedUserId : this.authService.getCurrentUserId() ,
+			lastUpdatedDate :new Date(),
+			status : [false, Validators.required],
+			isDeleted : [false],
+			name : ["", Validators.required],
+			code : ["", Validators.required],
+			address : ["", Validators.required],
+			phoneNumber : ["", Validators.required],
+			email : ["", Validators.required]
 		})
 	}
 
 	deleteCustomer(customerId:number){
-		this.customerService.deleteCustomer(customerId).subscribe(data=>{
+		this.customerService.deleteCustomer(customerId,this.authService.getCurrentUserId()).subscribe(data=>{
 			this.alertifyService.success(data.toString());
 			this.customerList=this.customerList.filter(x=> x.id!=customerId);
 			this.dataSource = new MatTableDataSource(this.customerList);

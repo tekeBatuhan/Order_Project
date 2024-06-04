@@ -34,7 +34,7 @@ namespace Business.Handlers.WareHouseProductMappings.Queries
             [SecuredOperation(Priority = 1)]
             public async Task<IDataResult<IEnumerable<WareHouseProductMapping>>> Handle(GetWareHouseProductMappingsQuery request, CancellationToken cancellationToken)
             {
-                return new SuccessDataResult<IEnumerable<WareHouseProductMapping>>(await _wareHouseProductMappingRepository.GetListAsync());
+                return new SuccessDataResult<IEnumerable<WareHouseProductMapping>>(await _wareHouseProductMappingRepository.GetListAsync(x => x.Status));
             }
         }
     }

@@ -9,6 +9,7 @@ using DataAccess.Abstract;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using System;
 
 
 namespace Business.Handlers.WareHouseProductMappings.Commands
@@ -19,6 +20,7 @@ namespace Business.Handlers.WareHouseProductMappings.Commands
     public class DeleteWareHouseProductMappingCommand : IRequest<IResult>
     {
         public int Id { get; set; }
+        public int UserId { get; set; }
 
         public class DeleteWareHouseProductMappingCommandHandler : IRequestHandler<DeleteWareHouseProductMappingCommand, IResult>
         {
@@ -37,8 +39,12 @@ namespace Business.Handlers.WareHouseProductMappings.Commands
             public async Task<IResult> Handle(DeleteWareHouseProductMappingCommand request, CancellationToken cancellationToken)
             {
                 var wareHouseProductMappingToDelete = _wareHouseProductMappingRepository.Get(p => p.Id == request.Id);
+                wareHouseProductMappingToDelete.Status = false;
+                wareHouseProductMappingToDelete.isDeleted = true;
+                wareHouseProductMappingToDelete.LastUpdatedDate = DateTime.Now;
+                wareHouseProductMappingToDelete.LastUpdatedUserId = request.UserId;
 
-                _wareHouseProductMappingRepository.Delete(wareHouseProductMappingToDelete);
+                _wareHouseProductMappingRepository.Update(wareHouseProductMappingToDelete);
                 await _wareHouseProductMappingRepository.SaveChangesAsync();
                 return new SuccessResult(Messages.Deleted);
             }

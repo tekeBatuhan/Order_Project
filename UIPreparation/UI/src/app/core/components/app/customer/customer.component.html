@@ -32,7 +32,7 @@
 	
                    <ng-container matColumnDef="createdDate">
                      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'CreatedDate'|translate}}</th>
-                     <td mat-cell *matCellDef="let element">{{element.createdDate}}</td>
+                     <td mat-cell *matCellDef="let element">{{element.createdDate | date:'short'}}</td>
 				   </ng-container>
 	
                    <ng-container matColumnDef="lastUpdatedUserId">
@@ -140,52 +140,7 @@
         <div class="separator"></div>
         <form *ngIf="customerAddForm" [formGroup]="customerAddForm" (ngSubmit)="save()">
           
-					<div class="row">
-						<div class="col-md-12">
-							<select class="browser-default custom-select" formControlName="createdUserId">
-								<option *ngFor="let item of customerlookUp" [value]="item.id"> {{item.label}}</option>
-							</select>
-						</div>
-					</div>
-					<div class="row">
-            <div class="col col-md-12">
-              <mat-form-field class="example-full-width">
-                <input matInput placeholder="createdDate" type="date" id="createdDate" name="createdDate"
-                       formControlName="createdDate" />
-                <div class="alert alert-danger"
-                     *ngIf="customerAddForm.get('createdDate')!.hasError('createdDate') && customerAddForm.get('createdDate')!.dirty">
-                </div>
-              </mat-form-field>
-            </div>
-          </div>
-					<div class="row">
-						<div class="col-md-12">
-							<select class="browser-default custom-select" formControlName="lastUpdatedUserId">
-								<option *ngFor="let item of customerlookUp" [value]="item.id"> {{item.label}}</option>
-							</select>
-						</div>
-					</div>
-					<div class="row">
-            <div class="col col-md-12">
-              <mat-form-field class="example-full-width">
-                <input matInput placeholder="lastUpdatedDate" type="date" id="lastUpdatedDate" name="lastUpdatedDate"
-                       formControlName="lastUpdatedDate" />
-                <div class="alert alert-danger"
-                     *ngIf="customerAddForm.get('lastUpdatedDate')!.hasError('lastUpdatedDate') && customerAddForm.get('lastUpdatedDate')!.dirty">
-                </div>
-              </mat-form-field>
-            </div>
-          </div><div class="row">
-            <div class="col col-md-2">
-                       <mat-checkbox  formControlName="status" id="status" name="status" > status
-                      </mat-checkbox>
-            </div>
-          </div><div class="row">
-            <div class="col col-md-2">
-                       <mat-checkbox  formControlName="isDeleted" id="isDeleted" name="isDeleted" > isDeleted
-                      </mat-checkbox>
-            </div>
-          </div>
+					
 					<div class="row">
             <div class="col col-md-12">
               <mat-form-field class="example-full-width">
@@ -239,6 +194,12 @@
                      *ngIf="customerAddForm.get('email')!.hasError('email') && customerAddForm.get('email')!.dirty">
                 </div>
               </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-md-2">
+                       <mat-checkbox  formControlName="status" id="status" name="status" > status
+                      </mat-checkbox>
             </div>
           </div>
                    

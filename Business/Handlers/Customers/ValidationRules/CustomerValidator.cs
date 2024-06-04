@@ -13,7 +13,7 @@ namespace Business.Handlers.Customers.ValidationRules
             RuleFor(x => x.Address).NotEmpty();
             RuleFor(x => x.PhoneNumber).NotEmpty();
             RuleFor(x => x.Email).NotEmpty();
-            RuleFor(x => x.Orders).NotEmpty();
+            //RuleFor(x => x.Orders).NotEmpty();
 
         }
     }
@@ -25,7 +25,7 @@ namespace Business.Handlers.Customers.ValidationRules
             RuleFor(x => x.Address).NotEmpty();
             RuleFor(x => x.PhoneNumber).NotEmpty();
             RuleFor(x => x.Email).NotEmpty();
-            RuleFor(x => x.Orders).NotEmpty();
+            //RuleFor(x => x.Orders).NotEmpty();
 
         }
     }

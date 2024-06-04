@@ -9,6 +9,7 @@ using DataAccess.Abstract;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using System;
 
 
 namespace Business.Handlers.WareHouses.Commands
@@ -19,6 +20,7 @@ namespace Business.Handlers.WareHouses.Commands
     public class DeleteWareHouseCommand : IRequest<IResult>
     {
         public int Id { get; set; }
+        public int UserId { get; set; }
 
         public class DeleteWareHouseCommandHandler : IRequestHandler<DeleteWareHouseCommand, IResult>
         {
@@ -37,8 +39,12 @@ namespace Business.Handlers.WareHouses.Commands
             public async Task<IResult> Handle(DeleteWareHouseCommand request, CancellationToken cancellationToken)
             {
                 var wareHouseToDelete = _wareHouseRepository.Get(p => p.Id == request.Id);
+                wareHouseToDelete.Status = false;
+                wareHouseToDelete.isDeleted = true;
+                wareHouseToDelete.LastUpdatedDate = DateTime.Now;
+                wareHouseToDelete.LastUpdatedUserId = request.UserId;
 
-                _wareHouseRepository.Delete(wareHouseToDelete);
+                _wareHouseRepository.Update(wareHouseToDelete);
                 await _wareHouseRepository.SaveChangesAsync();
                 return new SuccessResult(Messages.Deleted);
             }

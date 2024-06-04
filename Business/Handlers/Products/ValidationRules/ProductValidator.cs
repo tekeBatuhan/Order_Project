@@ -10,8 +10,8 @@ namespace Business.Handlers.Products.ValidationRules
         public CreateProductValidator()
         {
             RuleFor(x => x.ColorId).NotEmpty();
-            RuleFor(x => x.WareHouseProductMappings).NotEmpty();
-            RuleFor(x => x.Orders).NotEmpty();
+            //RuleFor(x => x.WareHouseProductMappings).NotEmpty();
+            //RuleFor(x => x.Orders).NotEmpty();
 
         }
     }
@@ -20,8 +20,8 @@ namespace Business.Handlers.Products.ValidationRules
         public UpdateProductValidator()
         {
             RuleFor(x => x.ColorId).NotEmpty();
-            RuleFor(x => x.WareHouseProductMappings).NotEmpty();
-            RuleFor(x => x.Orders).NotEmpty();
+            //RuleFor(x => x.WareHouseProductMappings).NotEmpty();
+            //RuleFor(x => x.Orders).NotEmpty();
 
         }
     }

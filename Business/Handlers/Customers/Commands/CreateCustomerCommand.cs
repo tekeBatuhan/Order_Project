@@ -52,7 +52,7 @@ namespace Business.Handlers.Customers.Commands
             [SecuredOperation(Priority = 1)]
             public async Task<IResult> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
             {
-                var isThereCustomerRecord = _customerRepository.Query().Any(u => u.CreatedUserId == request.CreatedUserId);
+                var isThereCustomerRecord = _customerRepository.Query().Any(u => u.Name == request.Name && u.Status);
 
                 if (isThereCustomerRecord == true)
                     return new ErrorResult(Messages.NameAlreadyExist);
@@ -64,7 +64,7 @@ namespace Business.Handlers.Customers.Commands
                     LastUpdatedUserId = request.LastUpdatedUserId,
                     LastUpdatedDate = request.LastUpdatedDate,
                     Status = request.Status,
-                    isDeleted = request.isDeleted,
+                    isDeleted = false,
                     Name = request.Name,
                     Code = request.Code,
                     Address = request.Address,

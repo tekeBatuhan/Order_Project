@@ -6,8 +6,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { AlertifyService } from 'app/core/services/alertify.service';
 import { LookUpService } from 'app/core/services/lookUp.service';
 import { AuthService } from 'app/core/components/admin/login/services/auth.service';
-import { WareHouse } from './models/WareHouse';
-import { WareHouseService } from './services/WareHouse.service';
+import { WareHouse } from './models/warehouse';
+import { WareHouseService } from './services/warehouse.service';
 import { environment } from 'environments/environment';
 
 declare var jQuery: any;
@@ -22,7 +22,7 @@ export class WareHouseComponent implements AfterViewInit, OnInit {
 	dataSource: MatTableDataSource<any>;
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
-	displayedColumns: string[] = ['id','createdUserId','createdDate','lastUpdatedUserId','lastUpdatedDate','status','isDeleted','name', 'update','delete'];
+	displayedColumns: string[] = ['name','createdDate','status', 'update','delete'];
 
 	wareHouseList:WareHouse[];
 	wareHouse:WareHouse=new WareHouse();
@@ -73,6 +73,7 @@ export class WareHouseComponent implements AfterViewInit, OnInit {
 			jQuery('#warehouse').modal('hide');
 			this.alertifyService.success(data);
 			this.clearFormGroup(this.wareHouseAddForm);
+			this.createWareHouseAddForm();
 
 		})
 
@@ -98,18 +99,18 @@ export class WareHouseComponent implements AfterViewInit, OnInit {
 	createWareHouseAddForm() {
 		this.wareHouseAddForm = this.formBuilder.group({		
 			id : [0],
-createdUserId : [0, Validators.required],
-createdDate : [null, Validators.required],
-lastUpdatedUserId : [0, Validators.required],
-lastUpdatedDate : [null, Validators.required],
-status : [false, Validators.required],
-isDeleted : [false, Validators.required],
-name : ["", Validators.required]
+			createdUserId : this.authService.getCurrentUserId(),
+			createdDate : new Date(),
+			lastUpdatedUserId : this.authService.getCurrentUserId(),
+			lastUpdatedDate : new Date(),
+			status : [false, Validators.required],
+			isDeleted : [false],
+			name : ["", Validators.required]
 		})
 	}
 
 	deleteWareHouse(wareHouseId:number){
-		this.wareHouseService.deleteWareHouse(wareHouseId).subscribe(data=>{
+		this.wareHouseService.deleteWareHouse(wareHouseId,this.authService.getCurrentUserId()).subscribe(data=>{
 			this.alertifyService.success(data.toString());
 			this.wareHouseList=this.wareHouseList.filter(x=> x.id!=wareHouseId);
 			this.dataSource = new MatTableDataSource(this.wareHouseList);

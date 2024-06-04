@@ -4,11 +4,15 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AlertifyService } from 'app/core/services/alertify.service';
-import { LookUpService } from 'app/core/services/lookUp.service';
 import { AuthService } from 'app/core/components/admin/login/services/auth.service';
-import { Product } from './models/Product';
-import { ProductService } from './services/Product.service';
+import { Product } from './models/product';
+import { ProductService } from './services/product.service';
 import { environment } from 'environments/environment';
+import { ColorService } from '../color/services/color.service';
+import { Color } from '../color/models/color';
+import { LookUpService } from 'app/core/services/lookUp.service';
+import { LookUp } from 'app/core/models/lookUp';
+import { data } from 'jquery';
 
 declare var jQuery: any;
 
@@ -18,41 +22,47 @@ declare var jQuery: any;
 	styleUrls: ['./product.component.scss']
 })
 export class ProductComponent implements AfterViewInit, OnInit {
-	
+
 	dataSource: MatTableDataSource<any>;
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
-	displayedColumns: string[] = ['id','createdUserId','createdDate','lastUpdatedUserId','lastUpdatedDate','status','isDeleted','name','colorId', 'update','delete'];
+	displayedColumns: string[] = ['name', 'size', 'createdDate', 'update', 'delete'];
 
-	productList:Product[];
-	product:Product=new Product();
-
+	productList: Product[];
+	colorList: LookUp[];
+	wareHouseList: LookUp[];
+	product: Product = new Product();
+	selectedOption: any;
 	productAddForm: FormGroup;
+	productId: number;
 
+	constructor(private productService: ProductService, private lookupService: LookUpService, private alertifyService: AlertifyService, private formBuilder: FormBuilder, private authService: AuthService) { }
 
-	productId:number;
-
-	constructor(private productService:ProductService, private lookupService:LookUpService,private alertifyService:AlertifyService,private formBuilder: FormBuilder, private authService:AuthService) { }
-
-    ngAfterViewInit(): void {
-        this.getProductList();
-    }
-
-	ngOnInit() {
-
-		this.createProductAddForm();
+	ngAfterViewInit(): void {
+		this.getProductList();
 	}
 
+	ngOnInit() {
+		this.createProductAddForm();
+
+		this.lookupService.getColorLookUp().subscribe(data => {
+			this.colorList = data;
+		})
+		this.lookupService.getWareHouseLookUp().subscribe(data => {
+			this.wareHouseList = data;
+		})
+	}
 
 	getProductList() {
 		this.productService.getProductList().subscribe(data => {
 			this.productList = data;
+
 			this.dataSource = new MatTableDataSource(data);
-            this.configDataTable();
+			this.configDataTable();
 		});
 	}
 
-	save(){
+	save() {
 
 		if (this.productAddForm.valid) {
 			this.product = Object.assign({}, this.productAddForm.value)
@@ -65,7 +75,7 @@ export class ProductComponent implements AfterViewInit, OnInit {
 
 	}
 
-	addProduct(){
+	addProduct() {
 
 		this.productService.addProduct(this.product).subscribe(data => {
 			this.getProductList();
@@ -73,19 +83,19 @@ export class ProductComponent implements AfterViewInit, OnInit {
 			jQuery('#product').modal('hide');
 			this.alertifyService.success(data);
 			this.clearFormGroup(this.productAddForm);
+			this.createProductAddForm();
 
 		})
 
 	}
 
-	updateProduct(){
-
+	updateProduct() {
 		this.productService.updateProduct(this.product).subscribe(data => {
 
-			var index=this.productList.findIndex(x=>x.id==this.product.id);
-			this.productList[index]=this.product;
+			var index = this.productList.findIndex(x => x.id == this.product.id);
+			this.productList[index] = this.product;
 			this.dataSource = new MatTableDataSource(this.productList);
-            this.configDataTable();
+			this.configDataTable();
 			this.product = new Product();
 			jQuery('#product').modal('hide');
 			this.alertifyService.success(data);
@@ -95,33 +105,51 @@ export class ProductComponent implements AfterViewInit, OnInit {
 
 	}
 
+	onOptionSelected(event: Event): void {
+		const selectElement = event.target as HTMLSelectElement;
+		this.selectedOption = selectElement.value;
+		console.log('Seçilen değer:', this.selectedOption);
+		this.updateProductAddForm();
+
+	}
+
+	updateProductAddForm(): void {
+		this.productAddForm.patchValue({
+			size: this.selectedOption
+		});
+	}
+
 	createProductAddForm() {
-		this.productAddForm = this.formBuilder.group({		
-			id : [0],
-createdUserId : [0, Validators.required],
-createdDate : [null, Validators.required],
-lastUpdatedUserId : [0, Validators.required],
-lastUpdatedDate : [null, Validators.required],
-status : [false, Validators.required],
-isDeleted : [false, Validators.required],
-name : ["", Validators.required],
-colorId : [0, Validators.required]
+		this.productAddForm = this.formBuilder.group({
+			id: 0,
+			createdUserId: this.authService.getCurrentUserId(),
+			createdDate: new Date(),
+			lastUpdatedUserId: this.authService.getCurrentUserId(),
+			lastUpdatedDate: new Date(),
+			status: [false, Validators.required],
+			isDeleted: [false],
+			name: ["", Validators.required],
+			colorId: [0, Validators.required],
+			wareHouseId: [0, Validators.required],
+			count: [0, Validators.required],
+			readyForSale: [false, Validators.required],
+			size: this.selectedOption
 		})
 	}
 
-	deleteProduct(productId:number){
-		this.productService.deleteProduct(productId).subscribe(data=>{
+	deleteProduct(productId: number) {
+		this.productService.deleteProduct(productId, this.authService.getCurrentUserId()).subscribe(data => {
 			this.alertifyService.success(data.toString());
-			this.productList=this.productList.filter(x=> x.id!=productId);
+			this.productList = this.productList.filter(x => x.id != productId);
 			this.dataSource = new MatTableDataSource(this.productList);
 			this.configDataTable();
 		})
 	}
 
-	getProductById(productId:number){
+	getProductById(productId: number) {
 		this.clearFormGroup(this.productAddForm);
-		this.productService.getProductById(productId).subscribe(data=>{
-			this.product=data;
+		this.productService.getProductById(productId).subscribe(data => {
+			this.product = data;
 			this.productAddForm.patchValue(data);
 		})
 	}
@@ -139,7 +167,7 @@ colorId : [0, Validators.required]
 		});
 	}
 
-	checkClaim(claim:string):boolean{
+	checkClaim(claim: string): boolean {
 		return this.authService.claimGuard(claim)
 	}
 
@@ -157,4 +185,4 @@ colorId : [0, Validators.required]
 		}
 	}
 
-  }
+}

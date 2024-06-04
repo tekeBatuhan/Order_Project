@@ -1,7 +1,7 @@
 ﻿import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { WareHouse } from '../models/WareHouse';
+import { WareHouse } from '../models/warehouse';
 import { environment } from 'environments/environment';
 
 
@@ -32,8 +32,8 @@ export class WareHouseService {
 
   }
 
-  deleteWareHouse(id: number) {
-    return this.httpClient.request('delete', environment.getApiUrl + '/wareHouses/', { body: { id: id } });
+  deleteWareHouse(id: number, userId : number) {
+    return this.httpClient.request('delete', environment.getApiUrl + '/wareHouses/', { body: { id: id, userId:userId } });
   }
 
 

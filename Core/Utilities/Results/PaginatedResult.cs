@@ -14,7 +14,8 @@ namespace Core.Utilities.Results
         }
 
         public bool Success { get; set; }
-        public string Message { get; }
+        public string Message { get; }  
+        public int Id { get; set; }
         public T Data { get; }
         public int PageNumber { get; set; }
         public int PageSize { get; set; }

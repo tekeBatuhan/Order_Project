@@ -7,7 +7,7 @@ import { AlertifyService } from 'app/core/services/alertify.service';
 import { LookUpService } from 'app/core/services/lookUp.service';
 import { AuthService } from 'app/core/components/admin/login/services/auth.service';
 import { Order } from './models/Order';
-import { OrderService } from './services/Order.service';
+import { OrderService } from './services/order.service';
 import { environment } from 'environments/environment';
 
 declare var jQuery: any;
@@ -22,7 +22,7 @@ export class OrderComponent implements AfterViewInit, OnInit {
 	dataSource: MatTableDataSource<any>;
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
-	displayedColumns: string[] = ['id','createdUserId','createdDate','lastUpdatedUserId','lastUpdatedDate','status','isDeleted','quantity','productId','customerId', 'update','delete'];
+	displayedColumns: string[] = ['productId','customerId','createdDate','status','quantity', 'update','delete'];
 
 	orderList:Order[];
 	order:Order=new Order();
@@ -73,6 +73,7 @@ export class OrderComponent implements AfterViewInit, OnInit {
 			jQuery('#order').modal('hide');
 			this.alertifyService.success(data);
 			this.clearFormGroup(this.orderAddForm);
+			this.createOrderAddForm();
 
 		})
 
@@ -97,21 +98,21 @@ export class OrderComponent implements AfterViewInit, OnInit {
 
 	createOrderAddForm() {
 		this.orderAddForm = this.formBuilder.group({		
-			id : [0],
-createdUserId : [0, Validators.required],
-createdDate : [null, Validators.required],
-lastUpdatedUserId : [0, Validators.required],
-lastUpdatedDate : [null, Validators.required],
-status : [false, Validators.required],
-isDeleted : [false, Validators.required],
-quantity : [0, Validators.required],
-productId : [0, Validators.required],
-customerId : [0, Validators.required]
+			id : 0,
+			createdUserId : this.authService.getCurrentUserId(),
+			createdDate : new Date(),
+			lastUpdatedUserId : this.authService.getCurrentUserId(),
+			lastUpdatedDate : new Date,
+			status : [false, Validators.required],
+			isDeleted : [false],
+			quantity : [0, Validators.required],
+			productId : [0, Validators.required],
+			customerId : [0, Validators.required]
 		})
 	}
 
 	deleteOrder(orderId:number){
-		this.orderService.deleteOrder(orderId).subscribe(data=>{
+		this.orderService.deleteOrder(orderId,this.authService.getCurrentUserId()).subscribe(data=>{
 			this.alertifyService.success(data.toString());
 			this.orderList=this.orderList.filter(x=> x.id!=orderId);
 			this.dataSource = new MatTableDataSource(this.orderList);
